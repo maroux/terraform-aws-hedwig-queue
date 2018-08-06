@@ -14,6 +14,7 @@ creates infra for Hedwig consumer app.
 module "consumer-dev-myapp" {
   source   = "Automatic/hedwig-queue/aws"
   queue    = "DEV-MYAPP"
+  iam      = true
   alerting = true
 
   tags = {

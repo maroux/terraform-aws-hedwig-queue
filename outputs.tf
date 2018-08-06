@@ -17,3 +17,8 @@ output "dlq_name" {
   value       = "${aws_sqs_queue.dlq.name}"
   description = "Name of the DLQ"
 }
+
+output "policy_arn" {
+  value       = "${element(concat(aws_iam_policy.policy.*.arn, list("")), 0)}"
+  description = "ARN of the policy. This should be attached to your app's IAM user."
+}

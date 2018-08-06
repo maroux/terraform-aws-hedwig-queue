@@ -20,6 +20,11 @@ variable "tags" {
   type        = "map"
 }
 
+variable "iam" {
+  description = "Should IAM policies be generated?"
+  default     = false
+}
+
 variable "alerting" {
   description = "Should Cloudwatch alerts be generated?"
   default     = "false"

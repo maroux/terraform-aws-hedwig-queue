@@ -91,3 +91,35 @@ resource "aws_cloudwatch_metric_alarm" "dlq_alert" {
   alarm_actions     = "${var.dlq_alarm_high_message_count_actions}"
   ok_actions        = "${var.dlq_ok_high_message_count_actions}"
 }
+
+data "aws_iam_policy_document" "policy_document" {
+  "statement" {
+    actions = [
+      "sqs:*",
+    ]
+
+    resources = [
+      "${aws_sqs_queue.sqs_queue.arn}",
+      "${aws_sqs_queue.dlq.arn}",
+    ]
+  }
+
+  "statement" {
+    actions = [
+      "sns:Publish",
+    ]
+
+    resources = [
+      "arn:aws:sns:${var.aws_region}:${var.aws_account_id}:hedwig-*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "policy" {
+  count = "${var.iam == "true" ? 1 : 0}"
+
+  name        = "hedwig-${var.queue}"
+  description = "Hedwig policy for ${var.queue}"
+
+  policy = "${data.aws_iam_policy_document.policy_document.json}"
+}
